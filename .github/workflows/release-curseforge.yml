@@ -7,9 +7,9 @@ on:
         description: 'Mod version (e.g. 0.1.1)'
         required: true
       game_versions:
-        description: 'CurseForge game versions, names or numeric IDs, comma-separated'
+        description: 'CurseForge numeric gameVersion IDs (minecraft.curseforge.com legacy API), comma-separated'
         required: true
-        default: '1.20.1,Forge,Client,Server,Java 17'
+        default: '7498,68441,8855,8856,9414,11142'
       release_type:
         description: 'CurseForge release type'
         required: true
