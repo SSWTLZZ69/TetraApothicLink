@@ -1,0 +1,40 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.createdelight.tetraapothiclink.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "tetra_apothic_link.refmap.json",
+  "mixins": [
+    "minecraft.LivingEntityMixin",
+    "minecraft.PlayerMixin",
+    "forge.ForgeHooksMixin",
+    "attributeslib.AttributeEventsMixin",
+    "apotheosis.AdventureEventsMixin",
+    "apotheosis.AffixInstanceMixin",
+    "apotheosis.AffixApplicabilityMixin",
+    "apotheosis.AffixHelperMixin",
+    "apotheosis.GemMixin",
+    "apotheosis.LootCategoryMixin",
+    "apotheosis.SocketHelperAccessor",
+    "apotheosis.SocketHelperMixin",
+    "apotheosis.SocketedGemsMixin",
+    "placebo.DynamicRegistryMixin",
+    "tetra.ModularBowItemMixin",
+    "tetra.ModularCrossbowItemMixin",
+    "tetra.ItemEffectHandlerMixin",
+    "tetra.ExplosionOutcomeMixin",
+    "tetrawear.EnergyAttackEffectMixin",
+    "tetrawear.EnergyDefensiveEffectMixin",
+    "tetrawear.DodgeMixin",
+    "tetrawear.EvadeEffectMixin",
+    "tetrawear.PlayerEnergyMixin",
+    "cei.EnchanterBehaviourMixin",
+    "cei.ClassicEnchanterBehaviourMixin",
+    "cei.BlazeEnchanterBlockEntityMixin",
+    "cei.ClassicBlazeEnchanterBlockEntityMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

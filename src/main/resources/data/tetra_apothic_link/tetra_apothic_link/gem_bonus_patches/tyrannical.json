@@ -1,0 +1,39 @@
+{
+  "target": "apotheosis:core/tyrannical",
+  "bonuses": [
+    {
+      "type": "apotheosis:multi_attribute",
+      "desc": "bonus.apotheosis:multi_attr.desc.and",
+      "gem_class": {"key": "tal_light_tyrannical", "types": ["light_chestplate", "light_leggings"]},
+      "modifiers": [
+        {
+          "attribute": "tetrawear:agility",
+          "operation": "ADDITION",
+          "values": {"common": 0.25, "uncommon": 0.40, "rare": 0.60, "epic": 0.85, "mythic": 1.15, "ancient": 1.50}
+        },
+        {
+          "attribute": "tetrawear:energy_attack_cost",
+          "operation": "MULTIPLY_TOTAL",
+          "values": {"common": -0.02, "uncommon": -0.03, "rare": -0.05, "epic": -0.07, "mythic": -0.09, "ancient": -0.12}
+        }
+      ]
+    },
+    {
+      "type": "apotheosis:multi_attribute",
+      "desc": "bonus.tetra_apothic_link.multi_attr.desc.but",
+      "gem_class": {"key": "tal_heavy_tyrannical", "types": ["heavy_chestplate", "heavy_leggings"]},
+      "modifiers": [
+        {
+          "attribute": "minecraft:generic.armor_toughness",
+          "operation": "ADDITION",
+          "values": {"common": 0.5, "uncommon": 1, "rare": 1.5, "epic": 2.5, "mythic": 4, "ancient": 6}
+        },
+        {
+          "attribute": "minecraft:generic.movement_speed",
+          "operation": "MULTIPLY_TOTAL",
+          "values": {"common": -0.005, "uncommon": -0.01, "rare": -0.015, "epic": -0.02, "mythic": -0.03, "ancient": -0.04}
+        }
+      ]
+    }
+  ]
+}

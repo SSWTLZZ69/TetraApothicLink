@@ -1,0 +1,5 @@
+{
+  "type": "tetra_apothic_link:special_effect",
+  "effect": "shockwave",
+  "types": ["heavy_chestplate"]
+}

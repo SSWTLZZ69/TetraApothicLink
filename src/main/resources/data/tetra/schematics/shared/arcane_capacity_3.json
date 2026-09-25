@@ -1,0 +1,56 @@
+{
+  "replace": true,
+  "localizationKey": "tetra_apothic_link/arcane_capacity_3",
+  "slots": [
+    "double/handle", "double/head_left", "double/head_right",
+    "single/handle", "single/head",
+    "sword/blade", "sword/hilt",
+    "bow/stave", "bow/string",
+    "shield/plate", "shield/grip",
+    "crossbow/stave", "crossbow/stock",
+    "boots/lining", "boots/body", "boots/attachment",
+    "chest/inner", "chest/outer", "chest/arms",
+    "leggings/lining", "leggings/cover", "leggings/attachment",
+    "helmet/lining", "helmet/cover", "helmet/attachment"
+  ],
+  "keySuffixes": [
+    "_double_handle", "_double_head_left", "_double_head_right",
+    "_single_handle", "_single_head",
+    "_sword_blade", "_sword_hilt",
+    "_bow_stave", "_bow_string",
+    "_shield_plate", "_shield_grip",
+    "_crossbow_stave", "_crossbow_stock",
+    "_boots_lining", "_boots_body", "_boots_attachment",
+    "_chest_inner", "_chest_outer", "_chest_arms",
+    "_leggings_lining", "_leggings_cover", "_leggings_attachment",
+    "_helmet_lining", "_helmet_cover", "_helmet_attachment"
+  ],
+  "materialSlotCount": 2,
+  "displayType": "improvement",
+  "glyph": { "textureX": 96, "textureY": 240 },
+  "requirement": {
+    "type": "tetra:and",
+    "requirements": [
+      { "type": "tetra:locked", "key": "tetra_apothic_link:arcane_capacity/3" },
+      {
+        "type": "tetra:improvement",
+        "improvement": "tetra_apothic_link/arcane_capacity",
+        "level": 2
+      },
+      { "type": "tetra:slot", "empty": false }
+    ]
+  },
+  "outcomes": [
+    {
+      "materialSlot": 0,
+      "material": { "items": ["apotheosis:gem_dust"], "count": 6 }
+    },
+    {
+      "materialSlot": 1,
+      "material": { "items": ["apotheosis:epic_material"], "count": 1 },
+      "requiredTools": { "hammer_dig": "minecraft:iron" },
+      "experienceCost": 20,
+      "improvements": { "tetra_apothic_link/arcane_capacity": 3 }
+    }
+  ]
+}

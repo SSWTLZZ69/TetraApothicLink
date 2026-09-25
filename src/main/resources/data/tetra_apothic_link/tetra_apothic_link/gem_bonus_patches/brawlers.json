@@ -1,0 +1,12 @@
+{
+  "target": "apotheosis:core/brawlers",
+  "bonuses": [
+    {
+      "type": "apotheosis:attribute",
+      "gem_class": {"key": "tal_light_brawlers", "types": ["light_leggings"]},
+      "attribute": "minecraft:generic.max_health",
+      "operation": "ADDITION",
+      "values": {"common": 0.5, "uncommon": 1, "rare": 1.5, "epic": 2, "mythic": 3, "ancient": 4}
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "module_weights": {
+    "armor/chest/chainmail": 1,
+    "armor/leggings/mail": 1,
+    "armor/boots/mail_body": 1,
+    "armor/helmet/mail_coif": 1,
+    "armor/chest/cuirass": 2,
+    "armor/leggings/legplates": 2,
+    "armor/boots/plate_body": 2,
+    "armor/helmet/sallet": 2,
+    "armor/chest/heavy_shoulderguards_curved": 3,
+    "armor/chest/heavy_shoulderguards_flat": 3,
+    "armor/chest/heavy_shoulderguards_vent": 3,
+    "armor/leggings/heavy_legplates_plate": 3,
+    "armor/leggings/heavy_legplates_skirt": 3,
+    "armor/leggings/heavy_legplates_vent": 3
+  },
+  "material_weights": {
+    "leather": -1,
+    "rabbit_hide": -1,
+    "phantom_membrane": -1,
+    "paper": -1,
+    "canvas": -1,
+    "hemp": -1,
+    "straw": -1,
+    "netherite": 1,
+    "dreadsteel_ingot": 1,
+    "end_dragon_ingot": 1,
+    "ghoststeel_ingot": 1,
+    "sun_light_ingot": 1,
+    "iceandfire_fire_dragonsteel": 1,
+    "iceandfire_ice_dragonsteel": 1,
+    "iceandfire_lightning_dragonsteel": 1
+  },
+  "material_tag_weights": {},
+  "material_category_weights": {
+    "fabric": -1,
+    "fibre": -1,
+    "skin": -1
+  }
+}

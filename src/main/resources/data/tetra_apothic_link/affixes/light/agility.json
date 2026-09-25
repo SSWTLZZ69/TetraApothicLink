@@ -1,0 +1,14 @@
+{
+  "type": "apotheosis:attribute",
+  "attribute": "tetrawear:agility",
+  "operation": "ADDITION",
+  "values": {
+    "common": { "min": 0.625, "steps": 2, "step": 0.125 },
+    "uncommon": { "min": 1.0, "steps": 2, "step": 0.125 },
+    "rare": { "min": 1.25, "steps": 2, "step": 0.125 },
+    "epic": { "min": 1.75, "steps": 2, "step": 0.125 },
+    "mythic": { "min": 2.25, "steps": 2, "step": 0.125 },
+    "ancient": { "min": 2.75, "steps": 2, "step": 0.125 }
+  },
+  "types": ["light_helmet", "light_chestplate", "light_leggings", "light_boots"]
+}

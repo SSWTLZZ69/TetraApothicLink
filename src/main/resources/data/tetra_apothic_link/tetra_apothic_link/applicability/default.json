@@ -1,0 +1,35 @@
+{
+  "affixes": {
+    "light": {
+      "deny": [
+        "apotheosis:armor/attribute/ironforged",
+        "apotheosis:armor/attribute/steel_touched",
+        "tetra_apothic_link:heavy/fortified",
+        "tetra_apothic_link:heavy/unyielding",
+        "tetra_apothic_link:heavy/stable",
+        "tetra_apothic_link:heavy/efficient_guard"
+      ]
+    },
+    "heavy": {
+      "deny": [
+        "apotheosis:armor/attribute/windswept",
+        "tetra_apothic_link:light/agility",
+        "tetra_apothic_link:light/energy_regeneration",
+        "tetra_apothic_link:light/efficient_strikes",
+        "tetra_apothic_link:light/efficient_guard"
+      ]
+    }
+  },
+  "gems": {
+    "light": {
+      "deny": [
+        "apotheosis:overworld/royalty"
+      ]
+    },
+    "heavy": {
+      "deny": [
+        "apotheosis:core/slipstream"
+      ]
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "apotheosis:attribute",
+  "attribute": "tetra_apothic_link:energy_regeneration",
+  "operation": "MULTIPLY_TOTAL",
+  "values": {
+    "common": { "min": 0.035, "steps": 2, "step": 0.005 },
+    "uncommon": { "min": 0.06, "steps": 2, "step": 0.005 },
+    "rare": { "min": 0.1025, "steps": 3, "step": 0.005 },
+    "epic": { "min": 0.1425, "steps": 3, "step": 0.005 },
+    "mythic": { "min": 0.19, "steps": 3, "step": 0.005 },
+    "ancient": { "min": 0.2575, "steps": 3, "step": 0.005 }
+  },
+  "types": ["light_helmet", "light_chestplate", "light_leggings", "light_boots"]
+}

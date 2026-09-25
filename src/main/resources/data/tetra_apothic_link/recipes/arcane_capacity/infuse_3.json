@@ -1,0 +1,57 @@
+{
+  "type": "apotheosis:enchanting",
+  "conditions": [
+    {
+      "type": "apotheosis:module",
+      "module": "enchantment"
+    }
+  ],
+  "input": {
+    "type": "tetra:scroll",
+    "key": "tetra_apothic_link/arcane_capacity_pending_3",
+    "schematics": [
+      ""
+    ],
+    "intricate": true,
+    "material": 2,
+    "ribbon": "27575e"
+  },
+  "requirements": {
+    "eterna": 40,
+    "quanta": 30,
+    "arcana": 30
+  },
+  "display_level": 7,
+  "result": {
+    "item": "tetra:scroll_rolled",
+    "count": 1,
+    "nbt": {
+      "BlockEntityTag": {
+        "data": [
+          {
+            "key": "tetra_apothic_link/arcane_capacity_3",
+            "schematics": [
+              "tetra:hone/gild_1",
+              "tetra:hone/gild_2",
+              "tetra:hone/gild_3",
+              "tetra:hone/gild_4",
+              "tetra:hone/gild_5",
+              "tetra_apothic_link:arcane_capacity/1",
+              "tetra_apothic_link:arcane_capacity/2",
+              "tetra_apothic_link:arcane_capacity/3"
+            ],
+            "intricate": true,
+            "material": 2,
+            "ribbon": "34717a",
+            "glyphs": [
+              4,
+              7,
+              13,
+              3
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

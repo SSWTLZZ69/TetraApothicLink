@@ -1,0 +1,69 @@
+{
+  "replace": true,
+  "breathing": {
+    "carriers": [{"affix": "tetra_apothic_link:ability/light/breathing", "categories": ["light_chestplate"], "slots": ["chest"]}],
+    "rarities": {
+      "apotheosis:common": {"start_multiplier": 1.05, "middle_multiplier": 1.15, "stable_multiplier": 1.25, "middle_ticks": 30, "stable_ticks": 60, "exhausted_normal_cap": 0.75},
+      "apotheosis:uncommon": {"start_multiplier": 1.07, "middle_multiplier": 1.20, "stable_multiplier": 1.35, "middle_ticks": 30, "stable_ticks": 60, "exhausted_normal_cap": 0.75},
+      "apotheosis:rare": {"start_multiplier": 1.10, "middle_multiplier": 1.25, "stable_multiplier": 1.50, "middle_ticks": 30, "stable_ticks": 60, "exhausted_normal_cap": 0.75},
+      "apotheosis:epic": {"start_multiplier": 1.12, "middle_multiplier": 1.32, "stable_multiplier": 1.65, "middle_ticks": 30, "stable_ticks": 60, "exhausted_normal_cap": 0.75},
+      "apotheosis:mythic": {"start_multiplier": 1.15, "middle_multiplier": 1.40, "stable_multiplier": 1.80, "middle_ticks": 30, "stable_ticks": 60, "exhausted_normal_cap": 0.75},
+      "apotheosis:ancient": {"start_multiplier": 1.20, "middle_multiplier": 1.50, "stable_multiplier": 2.00, "middle_ticks": 30, "stable_ticks": 60, "exhausted_normal_cap": 0.75}
+    }
+  },
+  "resurgence": {
+    "carriers": [{"affix": "tetra_apothic_link:ability/light/resurgence", "categories": ["light_leggings"], "slots": ["legs"]}],
+    "rarities": {
+      "apotheosis:common": {"window_ticks": 160, "speed_multiplier": 0.20, "speed_ticks": 40},
+      "apotheosis:uncommon": {"window_ticks": 160, "speed_multiplier": 0.25, "speed_ticks": 44},
+      "apotheosis:rare": {"window_ticks": 160, "speed_multiplier": 0.30, "speed_ticks": 48},
+      "apotheosis:epic": {"window_ticks": 160, "speed_multiplier": 0.35, "speed_ticks": 54},
+      "apotheosis:mythic": {"window_ticks": 160, "speed_multiplier": 0.40, "speed_ticks": 60},
+      "apotheosis:ancient": {"window_ticks": 160, "speed_multiplier": 0.45, "speed_ticks": 70}
+    }
+  },
+  "opportunity": {
+    "carriers": [{"affix": "tetra_apothic_link:ability/light/opportunity", "categories": ["light_boots"], "slots": ["feet"]}],
+    "rarities": {
+      "apotheosis:common": {"window_ticks": 40, "normal_stagger_ticks": 20, "boss_stagger_ticks": 6, "energy_refund_fraction": 0.25, "counter_damage_multiplier": 1.15, "counter_window_ticks": 40, "cooldown_ticks": 40},
+      "apotheosis:uncommon": {"window_ticks": 40, "normal_stagger_ticks": 24, "boss_stagger_ticks": 7, "energy_refund_fraction": 0.30, "counter_damage_multiplier": 1.20, "counter_window_ticks": 44, "cooldown_ticks": 40},
+      "apotheosis:rare": {"window_ticks": 40, "normal_stagger_ticks": 28, "boss_stagger_ticks": 8, "energy_refund_fraction": 0.35, "counter_damage_multiplier": 1.25, "counter_window_ticks": 48, "cooldown_ticks": 40},
+      "apotheosis:epic": {"window_ticks": 40, "normal_stagger_ticks": 32, "boss_stagger_ticks": 10, "energy_refund_fraction": 0.40, "counter_damage_multiplier": 1.30, "counter_window_ticks": 54, "cooldown_ticks": 40},
+      "apotheosis:mythic": {"window_ticks": 40, "normal_stagger_ticks": 36, "boss_stagger_ticks": 12, "energy_refund_fraction": 0.50, "counter_damage_multiplier": 1.40, "counter_window_ticks": 60, "cooldown_ticks": 40},
+      "apotheosis:ancient": {"window_ticks": 40, "normal_stagger_ticks": 40, "boss_stagger_ticks": 15, "energy_refund_fraction": 0.60, "counter_damage_multiplier": 1.50, "counter_window_ticks": 70, "cooldown_ticks": 40}
+    }
+  },
+  "chain_pressure": {
+    "carriers": [{"affix": "tetra_apothic_link:ability/heavy/chain_pressure", "categories": ["heavy_leggings"], "slots": ["legs"]}],
+    "rarities": {
+      "apotheosis:common": {"window_ticks": 30, "followup_cost_multiplier": 0.50, "followup_damage_multiplier": 0.90, "cooldown_ticks": 100},
+      "apotheosis:uncommon": {"window_ticks": 32, "followup_cost_multiplier": 0.45, "followup_damage_multiplier": 0.88, "cooldown_ticks": 100},
+      "apotheosis:rare": {"window_ticks": 36, "followup_cost_multiplier": 0.40, "followup_damage_multiplier": 0.85, "cooldown_ticks": 100},
+      "apotheosis:epic": {"window_ticks": 40, "followup_cost_multiplier": 0.35, "followup_damage_multiplier": 0.82, "cooldown_ticks": 100},
+      "apotheosis:mythic": {"window_ticks": 44, "followup_cost_multiplier": 0.30, "followup_damage_multiplier": 0.78, "cooldown_ticks": 100},
+      "apotheosis:ancient": {"window_ticks": 50, "followup_cost_multiplier": 0.25, "followup_damage_multiplier": 0.75, "cooldown_ticks": 100}
+    }
+  },
+  "buffer": {
+    "carriers": [{"affix": "tetra_apothic_link:ability/heavy/buffer", "categories": ["heavy_chestplate"], "slots": ["chest"]}],
+    "rarities": {
+      "apotheosis:common": {"damage_fraction": 0.15, "max_health_fraction": 0.25, "duration_ticks": 80, "interval_ticks": 10},
+      "apotheosis:uncommon": {"damage_fraction": 0.18, "max_health_fraction": 0.25, "duration_ticks": 80, "interval_ticks": 10},
+      "apotheosis:rare": {"damage_fraction": 0.21, "max_health_fraction": 0.25, "duration_ticks": 80, "interval_ticks": 10},
+      "apotheosis:epic": {"damage_fraction": 0.24, "max_health_fraction": 0.25, "duration_ticks": 80, "interval_ticks": 10},
+      "apotheosis:mythic": {"damage_fraction": 0.27, "max_health_fraction": 0.25, "duration_ticks": 80, "interval_ticks": 10},
+      "apotheosis:ancient": {"damage_fraction": 0.30, "max_health_fraction": 0.25, "duration_ticks": 80, "interval_ticks": 10}
+    }
+  },
+  "shockwave": {
+    "carriers": [{"affix": "tetra_apothic_link:ability/heavy/shockwave", "categories": ["heavy_chestplate"], "slots": ["chest"]}],
+    "rarities": {
+      "apotheosis:common": {"defense_load_threshold": 0.60, "radius": 3.0, "knockback": 0.60, "normal_slow_ticks": 30, "boss_slow_ticks": 10, "cooldown_ticks": 160},
+      "apotheosis:uncommon": {"defense_load_threshold": 0.55, "radius": 3.4, "knockback": 0.70, "normal_slow_ticks": 36, "boss_slow_ticks": 12, "cooldown_ticks": 160},
+      "apotheosis:rare": {"defense_load_threshold": 0.50, "radius": 3.8, "knockback": 0.80, "normal_slow_ticks": 42, "boss_slow_ticks": 15, "cooldown_ticks": 160},
+      "apotheosis:epic": {"defense_load_threshold": 0.45, "radius": 4.2, "knockback": 0.90, "normal_slow_ticks": 48, "boss_slow_ticks": 18, "cooldown_ticks": 160},
+      "apotheosis:mythic": {"defense_load_threshold": 0.40, "radius": 4.6, "knockback": 1.00, "normal_slow_ticks": 54, "boss_slow_ticks": 22, "cooldown_ticks": 160},
+      "apotheosis:ancient": {"defense_load_threshold": 0.35, "radius": 5.0, "knockback": 1.10, "normal_slow_ticks": 60, "boss_slow_ticks": 25, "cooldown_ticks": 160}
+    }
+  }
+}

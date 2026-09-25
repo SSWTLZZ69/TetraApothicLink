@@ -1,0 +1,19 @@
+{
+  "target": "apotheosis:core/guardian",
+  "bonuses": [
+    {
+      "type": "apotheosis:attribute",
+      "gem_class": {"key": "tal_light_guardian", "types": ["light_chestplate", "light_leggings"]},
+      "attribute": "tetrawear:energy_defence_cost",
+      "operation": "MULTIPLY_TOTAL",
+      "values": {"common": -0.03, "uncommon": -0.05, "rare": -0.07, "epic": -0.09, "mythic": -0.12, "ancient": -0.15}
+    },
+    {
+      "type": "apotheosis:attribute",
+      "gem_class": {"key": "tal_heavy_guardian", "types": ["heavy_chestplate", "heavy_leggings"]},
+      "attribute": "minecraft:generic.armor",
+      "operation": "ADDITION",
+      "values": {"common": 0.5, "uncommon": 1, "rare": 1.5, "epic": 2.5, "mythic": 3.5, "ancient": 5}
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "replace": false,
+  "rules": [
+    {
+      "id": "tetra_modular_bow",
+      "priority": 1000,
+      "items": ["tetra:modular_bow"],
+      "category": "bow"
+    },
+    {
+      "id": "tetra_modular_crossbow",
+      "priority": 1000,
+      "items": ["tetra:modular_crossbow"],
+      "category": "crossbow"
+    },
+    {
+      "id": "tetra_modular_shield",
+      "priority": 900,
+      "items": ["tetra:modular_shield"],
+      "category": "shield"
+    },
+    {
+      "id": "tetra_trident_head",
+      "priority": 800,
+      "items": ["tetra:modular_single"],
+      "modules": ["single/trident"],
+      "category": "trident"
+    },
+    {
+      "id": "tetra_heavy_blade",
+      "priority": 700,
+      "items": ["tetra:modular_sword"],
+      "modules": ["sword/heavy_blade"],
+      "category": "heavy_weapon"
+    },
+    {
+      "id": "tetra_heavy_double_heads",
+      "priority": 700,
+      "items": ["tetra:modular_double"],
+      "modules": {
+        "any": [
+          "double/adze_left",
+          "double/adze_right",
+          "double/basic_axe_left",
+          "double/basic_axe_right",
+          "double/basic_hammer_left",
+          "double/basic_hammer_right"
+        ]
+      },
+      "category": "heavy_weapon"
+    },
+    {
+      "id": "tetra_pickaxe_double_heads",
+      "priority": 600,
+      "items": ["tetra:modular_double"],
+      "modules": ["double/basic_pickaxe_left", "double/basic_pickaxe_right"],
+      "category": "pickaxe"
+    },
+    {
+      "id": "tetra_pickaxe_single_heads",
+      "priority": 600,
+      "items": ["tetra:modular_single"],
+      "modules": ["single/earthpiercer", "single/unbound_earthpiercer"],
+      "category": "pickaxe"
+    },
+    {
+      "id": "tetra_pickaxe_sword_blades",
+      "priority": 600,
+      "items": ["tetra:modular_sword"],
+      "modules": ["sword/stonecutter", "sword/unbound_stonecutter"],
+      "category": "pickaxe"
+    },
+    {
+      "id": "tetra_shovel_head",
+      "priority": 500,
+      "items": ["tetra:modular_single"],
+      "modules": ["single/basic_shovel"],
+      "category": "shovel"
+    },
+    {
+      "id": "tetra_modular_sword",
+      "priority": 400,
+      "items": ["tetra:modular_sword"],
+      "category": "sword"
+    },
+    {
+      "id": "tetra_spear_head",
+      "priority": 400,
+      "items": ["tetra:modular_single"],
+      "modules": ["single/spearhead"],
+      "category": "sword"
+    },
+    {
+      "id": "tetra_unclassified_double_tool",
+      "priority": 0,
+      "items": ["tetra:modular_double"],
+      "category": "none"
+    },
+    {
+      "id": "tetra_unclassified_single_tool",
+      "priority": 0,
+      "items": ["tetra:modular_single"],
+      "category": "none"
+    }
+  ]
+}

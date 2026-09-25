@@ -1,0 +1,143 @@
+name: Release to CurseForge
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Mod version (e.g. 0.1.1)'
+        required: true
+      game_versions:
+        description: 'CurseForge gameVersion IDs, comma-separated'
+        required: true
+        default: '11779,10150,9638'
+      release_type:
+        description: 'CurseForge release type'
+        required: true
+        default: 'release'
+        type: choice
+        options: [release, beta, alpha]
+      build_branch:
+        description: 'Branch/ref to build'
+        required: true
+        default: 'main'
+      create_github_release:
+        description: 'Also create a GitHub Release with the jar'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.build_branch }}
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build jar
+        run: bash ./gradlew build -x test --console=plain
+        env:
+          CI: 'true'
+
+      - name: Locate jar
+        id: jar
+        run: |
+          JAR=$(ls build/libs/tetra_apothic_link-*-${{ inputs.version }}.jar | head -1)
+          echo "path=$JAR" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "$JAR")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to CurseForge
+        env:
+          CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          CF_PROJECT_ID: '1653941'
+          JAR_PATH: ${{ steps.jar.outputs.path }}
+          JAR_NAME: ${{ steps.jar.outputs.name }}
+          GAME_VERSIONS: ${{ inputs.game_versions }}
+          RELEASE_TYPE: ${{ inputs.release_type }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          python3 - <<'PYEOF'
+          import json, os, urllib.request, uuid
+
+          token = os.environ['CF_TOKEN']
+          project = os.environ['CF_PROJECT_ID']
+          jar = os.environ['JAR_PATH']
+          jarname = os.environ['JAR_NAME']
+          gvs = [int(v.strip()) for v in os.environ['GAME_VERSIONS'].split(',')]
+          rtype = os.environ['RELEASE_TYPE']
+          ver = os.environ['VERSION']
+
+          changelog = (
+              "- Fix compatibility with Fallen Lib: Gem.bonuses and Gem.bonusMap now use\n"
+              "  mutable collections instead of immutable copies, preventing an\n"
+              "  UnsupportedOperationException during datapack reload when entering a world.\n\n"
+              "- 修复与 Fallen Lib 的兼容问题：Gem 的 bonuses/bonusMap 改用可变集合，\n"
+              "  避免进存档时数据包重载抛出 UnsupportedOperationException。"
+          )
+
+          metadata = {
+              "changelog": changelog,
+              "changelogType": "markdown",
+              "displayName": f"Tetra Apothic Link {ver}",
+              "gameVersions": gvs,
+              "releaseType": rtype,
+          }
+
+          boundary = uuid.uuid4().hex
+          CRLF = b"\r\n"
+          parts = []
+          parts.append(b"--" + boundary.encode() + CRLF)
+          parts.append(b'Content-Disposition: form-data; name="metadata"' + CRLF + CRLF)
+          parts.append(json.dumps(metadata).encode() + CRLF)
+          parts.append(b"--" + boundary.encode() + CRLF)
+          parts.append(
+              b'Content-Disposition: form-data; name="file"; filename="'
+              + jarname.encode() + b'"' + CRLF)
+          parts.append(b"Content-Type: application/java-archive" + CRLF + CRLF)
+          parts.append(open(jar, "rb").read() + CRLF)
+          parts.append(b"--" + boundary.encode() + b"--" + CRLF)
+          body = b"".join(parts)
+
+          req = urllib.request.Request(
+              f"https://minecraft.curseforge.com/api/projects/{project}/upload-file",
+              data=body,
+              headers={
+                  "X-Api-Token": token,
+                  "Content-Type": f"multipart/form-data; boundary={boundary}",
+              },
+              method="POST",
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=180) as resp:
+                  data = json.loads(resp.read())
+                  print(f"UPLOAD OK fileId={data.get('id')} fileName={data.get('fileName')}")
+          except urllib.error.HTTPError as e:
+              print(f"UPLOAD FAIL {e.code}: {e.read().decode('utf-8', 'replace')}")
+              raise SystemExit(1)
+          PYEOF
+
+      - name: Upload jar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.jar.outputs.name }}
+          path: ${{ steps.jar.outputs.path }}
+
+      - name: Create GitHub Release
+        if: ${{ inputs.create_github_release }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: v${{ inputs.version }}
+          files: ${{ steps.jar.outputs.path }}
+          generate_release_notes: true

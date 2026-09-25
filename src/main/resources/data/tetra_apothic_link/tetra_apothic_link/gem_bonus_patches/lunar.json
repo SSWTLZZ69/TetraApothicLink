@@ -1,0 +1,22 @@
+{
+  "target": "apotheosis:core/lunar",
+  "bonuses": [
+    {
+      "type": "apotheosis:multi_attribute",
+      "desc": "bonus.apotheosis:multi_attr.desc.and",
+      "gem_class": {"key": "tal_light_lunar", "types": ["light_chestplate"]},
+      "modifiers": [
+        {
+          "attribute": "tetra_apothic_link:energy_regeneration",
+          "operation": "MULTIPLY_TOTAL",
+          "values": {"common": 0.02, "uncommon": 0.03, "rare": 0.04, "epic": 0.05, "mythic": 0.06, "ancient": 0.08}
+        },
+        {
+          "attribute": "forge:entity_gravity",
+          "operation": "MULTIPLY_TOTAL",
+          "values": {"common": -0.03, "uncommon": -0.05, "rare": -0.08, "epic": -0.11, "mythic": -0.15, "ancient": -0.20}
+        }
+      ]
+    }
+  ]
+}

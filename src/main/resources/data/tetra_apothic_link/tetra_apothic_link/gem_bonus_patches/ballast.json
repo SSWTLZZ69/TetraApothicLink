@@ -1,0 +1,22 @@
+{
+  "target": "apotheosis:core/ballast",
+  "bonuses": [
+    {
+      "type": "apotheosis:multi_attribute",
+      "desc": "bonus.tetra_apothic_link.multi_attr.desc.but",
+      "gem_class": {"key": "tal_heavy_ballast", "types": ["heavy_chestplate"]},
+      "modifiers": [
+        {
+          "attribute": "minecraft:generic.knockback_resistance",
+          "operation": "ADDITION",
+          "values": {"common": 0.04, "uncommon": 0.07, "rare": 0.10, "epic": 0.14, "mythic": 0.18, "ancient": 0.24}
+        },
+        {
+          "attribute": "minecraft:generic.movement_speed",
+          "operation": "MULTIPLY_TOTAL",
+          "values": {"common": -0.005, "uncommon": -0.01, "rare": -0.015, "epic": -0.02, "mythic": -0.025, "ancient": -0.03}
+        }
+      ]
+    }
+  ]
+}

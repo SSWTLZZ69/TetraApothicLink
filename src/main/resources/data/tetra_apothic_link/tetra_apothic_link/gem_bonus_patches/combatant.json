@@ -1,0 +1,11 @@
+{
+  "target": "apotheosis:core/combatant",
+  "bonuses": [
+    {
+      "type": "apotheosis:damage_reduction",
+      "gem_class": {"key": "tal_heavy_combatant", "types": ["heavy_leggings"]},
+      "damage_type": "physical",
+      "values": {"common": 0.02, "uncommon": 0.03, "rare": 0.045, "epic": 0.06, "mythic": 0.075, "ancient": 0.09}
+    }
+  ]
+}

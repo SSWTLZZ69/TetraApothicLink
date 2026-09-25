@@ -1,0 +1,22 @@
+{
+  "target": "apotheosis:core/slipstream",
+  "bonuses": [
+    {
+      "type": "apotheosis:multi_attribute",
+      "desc": "bonus.apotheosis:multi_attr.desc.and",
+      "gem_class": {"key": "tal_light_slipstream", "types": ["light_boots"]},
+      "modifiers": [
+        {
+          "attribute": "attributeslib:dodge_chance",
+          "operation": "ADDITION",
+          "values": {"common": 0.01, "uncommon": 0.02, "rare": 0.035, "epic": 0.05, "mythic": 0.065, "ancient": 0.08}
+        },
+        {
+          "attribute": "minecraft:generic.movement_speed",
+          "operation": "MULTIPLY_TOTAL",
+          "values": {"common": 0.005, "uncommon": 0.01, "rare": 0.015, "epic": 0.02, "mythic": 0.025, "ancient": 0.03}
+        }
+      ]
+    }
+  ]
+}
