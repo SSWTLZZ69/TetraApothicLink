@@ -7,9 +7,9 @@ on:
         description: 'Mod version (e.g. 0.1.1)'
         required: true
       game_versions:
-        description: 'CurseForge gameVersion IDs, comma-separated'
+        description: 'CurseForge game versions, names or numeric IDs, comma-separated'
         required: true
-        default: '11779,10150,9638'
+        default: '1.20.1,Forge,Client,Server,Java 17'
       release_type:
         description: 'CurseForge release type'
         required: true
@@ -74,7 +74,47 @@ jobs:
           project = os.environ['CF_PROJECT_ID']
           jar = os.environ['JAR_PATH']
           jarname = os.environ['JAR_NAME']
-          gvs = [int(v.strip()) for v in os.environ['GAME_VERSIONS'].split(',')]
+          def api(path):
+              req = urllib.request.Request(
+                  f"https://api.curseforge.com{path}",
+                  headers={"Accept": "application/json", "X-Api-Key": token},
+              )
+              return json.loads(urllib.request.urlopen(req, timeout=60).read())
+
+          def resolve_inputs(token):
+              """Split names/ids into gameVersions (version ids) and gameVersionTypeIds."""
+              raw = [v.strip() for v in os.environ['GAME_VERSIONS'].split(',')]
+              if all(v.isdigit() for v in raw):
+                  return [int(v) for v in raw], []
+              type_names = {}
+              try:
+                  for t in api("/v1/games/432/version-types")["data"]:
+                      type_names[t["name"]] = t["id"]
+              except Exception as e:
+                  print(f"version-types lookup failed: {e}")
+              version_ids = {}
+              try:
+                  for g in api("/v2/games/432/versions")["data"]:
+                      for gv in g.get("versions", []):
+                          version_ids[gv["name"]] = gv["id"]
+                      if "name" in g:
+                          version_ids[g["name"]] = g.get("id")
+              except Exception as e:
+                  print(f"versions lookup failed: {e}")
+              gvs, gvt = [], []
+              for v in raw:
+                  if v.isdigit():
+                      gvs.append(int(v))
+                  elif v in version_ids:
+                      gvs.append(version_ids[v])
+                  elif v in type_names:
+                      gvt.append(type_names[v])
+                  else:
+                      raise SystemExit(f"Unknown name '{v}'. types={sorted(type_names)} versions(sample)={sorted(version_ids)[:60]}")
+              return gvs, gvt
+
+          gvs, gvtids = resolve_inputs(token)
+          print("gameVersions:", gvs, "gameVersionTypeIds:", gvtids)
           rtype = os.environ['RELEASE_TYPE']
           ver = os.environ['VERSION']
 
@@ -93,6 +133,8 @@ jobs:
               "gameVersions": gvs,
               "releaseType": rtype,
           }
+          if gvtids:
+              metadata["gameVersionTypeIds"] = gvtids
 
           boundary = uuid.uuid4().hex
           CRLF = b"\r\n"
