@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    { "type": "apotheosis:module", "module": "enchantment" },
+    { "type": "apotheosis:module", "module": "adventure" }
+  ],
+  "pattern": [ "RER", "DAD" ],
+  "key": {
+    "R": { "item": "apotheosis:rare_material" },
+    "E": { "item": "minecraft:enchanting_table" },
+    "D": { "item": "apotheosis:gem_dust" },
+    "A": { "item": "minecraft:anvil" }
+  },
+  "result": { "item": "tetra_apothic_link:ascension_table", "count": 1 }
+}

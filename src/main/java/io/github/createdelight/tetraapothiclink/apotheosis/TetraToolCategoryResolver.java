@@ -2,6 +2,7 @@ package io.github.createdelight.tetraapothiclink.apotheosis;
 
 import dev.shadowsoffire.apotheosis.adventure.loot.LootCategory;
 import io.github.createdelight.tetraapothiclink.data.RuleState;
+import io.github.createdelight.tetraapothiclink.internal.ResolutionReentryGuard;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -15,7 +16,7 @@ import se.mickelus.tetra.items.modular.impl.crossbow.AbstractModularCrossbowItem
 import se.mickelus.tetra.module.ItemModule;
 import se.mickelus.tetra.module.data.MaterialData;
 import se.mickelus.tetra.module.data.VariantData;
-import se.mickelus.tetrawear.item.ModularArmor;
+import io.github.createdelight.tetraapothiclink.compat.TetrawearCompat;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -37,11 +38,26 @@ public final class TetraToolCategoryResolver {
     }
 
     public static ToolCategoryResolution explain(ItemStack stack) {
-        if (stack.isEmpty() || stack.getItem() instanceof ModularArmor
-                || !(stack.getItem() instanceof IModularItem modularItem)) {
+        if (stack.isEmpty() || TetrawearCompat.isArmor(stack)
+                || !(stack.getItem() instanceof IModularItem)) {
             return ToolCategoryResolution.none(null);
         }
 
+        // fallen_lib's LootCategoryFix poisons AdventureConfig.TYPE_OVERRIDES with
+        // LootCategory.SWORD when LootCategory.forItem re-enters on the same stack.
+        // Bail out on re-entry so the nested call falls through to vanilla logic
+        // instead of writing a permanent sword override for this item id.
+        if (!ResolutionReentryGuard.enter(stack)) {
+            return ToolCategoryResolution.none(null);
+        }
+        try {
+            return explainInner(stack, (IModularItem) stack.getItem());
+        } finally {
+            ResolutionReentryGuard.release(stack);
+        }
+    }
+
+    private static ToolCategoryResolution explainInner(ItemStack stack, IModularItem modularItem) {
         ToolCategoryMatchContext context = context(stack, modularItem);
         ToolCategoryRules.Match configured = RuleState.toolCategoryRules().find(context);
         if (configured != null) {

@@ -8,7 +8,6 @@ import io.github.createdelight.tetraapothiclink.data.RuleState;
 import io.github.createdelight.tetraapothiclink.data.SpecialEffectReloadListener;
 import io.github.createdelight.tetraapothiclink.data.ToolCategoryReloadListener;
 import io.github.createdelight.tetraapothiclink.network.LinkNetwork;
-import io.github.createdelight.tetraapothiclink.special.BreathingStateAccess;
 import io.github.createdelight.tetraapothiclink.special.BufferedDamageEffect;
 import io.github.createdelight.tetraapothiclink.special.ChainPressureEffect;
 import io.github.createdelight.tetraapothiclink.special.OpportunityEffect;
@@ -26,9 +25,14 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
-import se.mickelus.tetrawear.systems.energy.EnergySystem;
+import io.github.createdelight.tetraapothiclink.compat.TetrawearCompat;
 
 public final class CommonEvents {
+
+    @SubscribeEvent
+    public void ascensionRuntimeSmoke(net.minecraftforge.event.server.ServerStartedEvent event) {
+        io.github.createdelight.tetraapothiclink.ascension.AscensionSmoke.run(event.getServer());
+    }
 
     @SubscribeEvent
     public void addReloadListeners(AddReloadListenerEvent event) {
@@ -67,6 +71,7 @@ public final class CommonEvents {
     @SubscribeEvent
     public void appendTooltip(ItemTooltipEvent event) {
         TooltipHandler.append(event);
+        io.github.createdelight.tetraapothiclink.ascension.AscensionTooltip.append(event);
     }
 
     @SubscribeEvent
@@ -105,6 +110,6 @@ public final class CommonEvents {
     }
 
     private static void resetBreathing(net.minecraft.world.entity.player.Player player) {
-        if (EnergySystem.get(player) instanceof BreathingStateAccess access) access.tetraApothicLink$resetBreathingState();
+        TetrawearCompat.resetBreathing(player);
     }
 }

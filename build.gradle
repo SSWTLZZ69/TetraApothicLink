@@ -28,6 +28,9 @@ minecraft {
         configureEach {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'info'
+            if (project.hasProperty('ascensionSmoke')) {
+                property 'tetra_apothic_link.ascensionSmoke', 'true'
+            }
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -61,7 +64,11 @@ dependencies {
 
     implementation fg.deobf('maven.modrinth:mutil:6.3.0')
     implementation fg.deobf('maven.modrinth:tetra:6.17.0')
-    implementation fg.deobf('curse.maven:tetrawear-670545:8570793')
+    compileOnly fg.deobf('curse.maven:tetrawear-670545:8570793')
+    // Use -PwithoutTetrawear=true to exercise the optional integration boundary.
+    if (!providers.gradleProperty('withoutTetrawear').map { it.toBoolean() }.getOrElse(false)) {
+        runtimeOnly fg.deobf('curse.maven:tetrawear-670545:8570793')
+    }
     implementation fg.deobf('curse.maven:apotheosis-313970:6461960')
     implementation fg.deobf('curse.maven:placebo-283644:6274231')
     implementation fg.deobf('curse.maven:apothic-attributes-898963:5634071')
@@ -131,8 +138,8 @@ curseforge {
         .orElse(providers.environmentVariable('CURSEFORGE_TOKEN'))
     project {
         id = '1653941'
-        releaseType = 'release'
-        changelog = 'Fix compatibility with Fallen Lib: gem bonuses and bonusMap now use mutable collections instead of immutable copies, preventing UnsupportedOperationException during datapack reload when entering a world.'
+        releaseType = mod_version.contains('alpha') ? 'alpha' : 'release'
+        changelog = 'Experimental Ascension Table: equipment-bound integrity/material ascension, native Tetra destabilized overlimit and stabilization, Apotheosis UI and algorithms; Tetrawear is optional. See CHANGELOG.md for details.'
         addGameVersion '1.20.1'
         addGameVersion 'Forge'
         addGameVersion 'Java 17'

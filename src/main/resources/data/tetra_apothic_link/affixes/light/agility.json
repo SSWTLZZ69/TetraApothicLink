@@ -1,4 +1,5 @@
 {
+  "conditions": [{"type": "forge:mod_loaded", "modid": "tetrawear"}],
   "type": "apotheosis:attribute",
   "attribute": "tetrawear:agility",
   "operation": "ADDITION",

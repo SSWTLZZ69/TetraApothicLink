@@ -26,6 +26,8 @@ public final class TetraApothicLink {
         LinkAttributes.ATTRIBUTES.register(modBus);
         LinkAttributes.registerListeners(modBus);
         LinkItems.register(modBus);
+        io.github.createdelight.tetraapothiclink.registry.AscensionRegistry.register(modBus);
+        io.github.createdelight.tetraapothiclink.registry.AscensionEnchantments.register(modBus);
         LinkConfig.register();
         LinkLootCategories.bootstrap();
         LinkAffixCodecs.bootstrap();

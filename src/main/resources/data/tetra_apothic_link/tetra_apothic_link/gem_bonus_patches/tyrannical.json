@@ -5,6 +5,7 @@
       "type": "apotheosis:multi_attribute",
       "desc": "bonus.apotheosis:multi_attr.desc.and",
       "gem_class": {"key": "tal_light_tyrannical", "types": ["light_chestplate", "light_leggings"]},
+      "conditions": [{"type": "forge:mod_loaded", "modid": "tetrawear"}],
       "modifiers": [
         {
           "attribute": "tetrawear:agility",

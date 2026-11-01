@@ -53,10 +53,16 @@ public final class GemBonusPatchReloadListener extends SimpleJsonResourceReloadL
                 if (!bonuses.get(index).isJsonObject()) {
                     throw new IllegalArgumentException("Bonus " + index + " must be a JSON object");
                 }
-                definitions.add(bonuses.get(index).deepCopy());
+                // Conditions apply per bonus: an optional attribute must not discard
+                // the other, independent bonuses in the same patch.
+                if (net.minecraftforge.common.crafting.CraftingHelper.processConditions(
+                        bonuses.get(index).getAsJsonObject(), "conditions",
+                        net.minecraftforge.common.crafting.conditions.ICondition.IContext.EMPTY)) {
+                    definitions.add(bonuses.get(index).deepCopy());
+                }
             }
             if (definitions.isEmpty()) {
-                LOGGER.error("Skipping incremental gem bonus patch {} because it has no bonuses.", source);
+                LOGGER.debug("Skipping incremental gem bonus patch {} because it has no enabled bonuses.", source);
                 return java.util.Optional.empty();
             }
             return java.util.Optional.of(new GemBonusPatchDefinition(source, target, List.copyOf(definitions)));

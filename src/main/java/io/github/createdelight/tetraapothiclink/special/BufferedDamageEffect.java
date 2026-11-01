@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import se.mickelus.tetrawear.systems.energy.EnergySystem;
+import io.github.createdelight.tetraapothiclink.compat.TetrawearCompat;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -37,7 +37,7 @@ public final class BufferedDamageEffect {
         if (defended == null || defended.gameTime() != player.level().getGameTime()
                 || defended.source() != event.getSource()) return;
         var data = SpecialPlayerData.read(player);
-        if (EnergySystem.getOrCreate(player).exhausted) return;
+        if (!TetrawearCompat.isLoaded() || TetrawearCompat.isExhausted(player)) return;
 
         SpecialAffixResolver.strongest(player, SpecialEffect.BUFFER).ifPresent(source -> {
             SpecialEffectRules.BufferTier tier = RuleState.specialEffectRules().buffer(source.rarityId()).orElse(null);

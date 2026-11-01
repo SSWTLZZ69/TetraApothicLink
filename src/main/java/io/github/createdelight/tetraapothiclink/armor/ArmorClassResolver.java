@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import io.github.createdelight.tetraapothiclink.api.ArmorClass;
 import io.github.createdelight.tetraapothiclink.api.event.GatherArmorWeightEvent;
 import io.github.createdelight.tetraapothiclink.data.RuleState;
+import io.github.createdelight.tetraapothiclink.internal.ResolutionReentryGuard;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -14,7 +15,7 @@ import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.module.ItemModule;
 import se.mickelus.tetra.module.data.MaterialData;
 import se.mickelus.tetra.module.data.VariantData;
-import se.mickelus.tetrawear.item.ModularArmor;
+import io.github.createdelight.tetraapothiclink.compat.TetrawearCompat;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,7 +29,7 @@ public final class ArmorClassResolver {
     }
 
     public static boolean isTetrawearArmor(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof ModularArmor;
+        return TetrawearCompat.isArmor(stack);
     }
 
     public static double getArmorWeight(ItemStack stack) {
@@ -41,10 +42,24 @@ public final class ArmorClassResolver {
 
     public static ArmorWeightResult resolve(ItemStack stack) {
         double threshold = RuleState.settings().heavyWeightThreshold();
-        if (!isTetrawearArmor(stack) || !(stack.getItem() instanceof IModularItem modularItem)) {
+        if (!isTetrawearArmor(stack) || !(stack.getItem() instanceof IModularItem)) {
             return ArmorWeightResult.notApplicable(threshold);
         }
 
+        // Same re-entry protection as TetraToolCategoryResolver: a nested
+        // LootCategory.forItem on this stack must not recurse into weight
+        // resolution, otherwise fallen_lib records a permanent sword override.
+        if (!ResolutionReentryGuard.enter(stack)) {
+            return ArmorWeightResult.notApplicable(threshold);
+        }
+        try {
+            return resolveInner(stack, (IModularItem) stack.getItem(), threshold);
+        } finally {
+            ResolutionReentryGuard.release(stack);
+        }
+    }
+
+    private static ArmorWeightResult resolveInner(ItemStack stack, IModularItem modularItem, double threshold) {
         ArmorWeightRules rules = RuleState.weightRules();
         List<ArmorWeightContribution> contributions = new ArrayList<>();
         double total = 0.0D;

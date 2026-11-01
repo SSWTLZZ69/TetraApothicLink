@@ -18,6 +18,13 @@ public final class LinkItems {
             "enchantment_tuner",
             () -> new EnchantmentTunerItem(new Item.Properties().stacksTo(1)));
 
+    public static final RegistryObject<Item> STRUCTURAL_MEDIUM = ITEMS.register("structural_medium", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> MATERIAL_MEDIUM = ITEMS.register("material_medium", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ATTENUATING_MEDIUM = ITEMS.register("attenuating_medium", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> OVERDRIVE_MEDIUM = ITEMS.register("overdrive_medium", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> STABILIZING_MEDIUM = ITEMS.register("stabilizing_medium", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ASCENSION_FOCUS = ITEMS.register("ascension_focus", io.github.createdelight.tetraapothiclink.ascension.AscensionFocusItem::new);
+
     private LinkItems() {
     }
 
@@ -29,6 +36,11 @@ public final class LinkItems {
     private static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ENCHANTMENT_TUNER);
+            event.accept(STRUCTURAL_MEDIUM);
+            event.accept(MATERIAL_MEDIUM);
+            event.accept(ATTENUATING_MEDIUM);
+            event.accept(OVERDRIVE_MEDIUM);
+            event.accept(STABILIZING_MEDIUM);
         }
     }
 }

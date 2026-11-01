@@ -13,8 +13,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.Tags;
-import se.mickelus.tetrawear.ConfigHandler;
-import se.mickelus.tetrawear.systems.energy.EnergySystem;
+import io.github.createdelight.tetraapothiclink.compat.TetrawearCompat;
 
 public final class ShockwaveEffect {
 
@@ -26,7 +25,7 @@ public final class ShockwaveEffect {
     public static Context capture(Player player, double damage) {
         if (player == null || player.level().isClientSide) return Context.disabled(player);
         return SpecialAffixResolver.strongest(player, SpecialEffect.SHOCKWAVE)
-                .map(source -> new Context(player, source, EnergySystem.getOrCreate(player).getCurrent(), defenseLoad(damage)))
+                .map(source -> new Context(player, source, TetrawearCompat.currentEnergy(player), defenseLoad(damage)))
                 .orElseGet(() -> Context.disabled(player));
     }
 
@@ -35,7 +34,7 @@ public final class ShockwaveEffect {
         Player player = context.player();
         if (player.level().isClientSide || !(player.level() instanceof ServerLevel level)) return;
 
-        double spent = context.energyBefore() - EnergySystem.getOrCreate(player).getCurrent();
+        double spent = context.energyBefore() - TetrawearCompat.currentEnergy(player);
         SpecialEffectRules.ShockwaveTier tier = RuleState.specialEffectRules().shockwave(context.source().rarityId()).orElse(null);
         if (tier == null) return;
 
@@ -86,11 +85,7 @@ public final class ShockwaveEffect {
     }
 
     public static double defenseLoad(double damage) {
-        return SpecialEffectMath.defenseLoad(
-                damage,
-                ConfigHandler.server.energyDefenceCostFactor.get(),
-                ConfigHandler.server.energyDefenceMinCost.get(),
-                ConfigHandler.server.energyDefenceMaxCost.get());
+        return TetrawearCompat.defenseLoad(damage);
     }
 
     public record Context(Player player, SpecialAffixResolver.AffixSource source, double energyBefore, double defenseLoad) {

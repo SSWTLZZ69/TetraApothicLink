@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    { "type": "apotheosis:module", "module": "enchantment" },
+    { "type": "apotheosis:module", "module": "adventure" }
+  ],
+  "pattern": [ "DID", "MPB", "DID" ],
+  "key": {
+    "D": { "item": "apotheosis:gem_dust" },
+    "I": { "item": "apotheosis:infused_breath" },
+    "M": { "item": "apotheosis:mythic_material" },
+    "P": { "item": "minecraft:paper" },
+    "B": { "item": "minecraft:dragon_breath" }
+  },
+  "result": { "item": "tetra_apothic_link:stabilizing_medium", "count": 1 }
+}

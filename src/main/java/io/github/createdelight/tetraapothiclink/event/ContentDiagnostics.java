@@ -29,6 +29,7 @@ public final class ContentDiagnostics {
     }
 
     public static void verifyAdaptedGems() {
+        if (!io.github.createdelight.tetraapothiclink.compat.TetrawearCompat.isLoaded()) return;
         DynamicHolder<LootRarity> common = RarityRegistry.INSTANCE.holder(id("apotheosis", "common"));
         if (!common.isBound()) {
             LOGGER.warn("Cannot verify adapted gems because apotheosis:common is not bound.");

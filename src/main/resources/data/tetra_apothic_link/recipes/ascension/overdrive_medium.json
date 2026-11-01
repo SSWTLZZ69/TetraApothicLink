@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "conditions": [
+    { "type": "apotheosis:module", "module": "enchantment" },
+    { "type": "apotheosis:module", "module": "adventure" }
+  ],
+  "ingredients": [
+    { "item": "minecraft:paper" },
+    { "item": "minecraft:rotten_flesh" },
+    { "item": "minecraft:fermented_spider_eye" },
+    { "item": "apotheosis:gem_dust" }
+  ],
+  "result": { "item": "tetra_apothic_link:overdrive_medium", "count": 1 }
+}

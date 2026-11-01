@@ -11,9 +11,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import se.mickelus.tetrawear.effects.evade.EvadeMobEffect;
-import se.mickelus.tetrawear.systems.energy.EnergyHelper;
-import se.mickelus.tetrawear.systems.energy.EnergySystem;
+import io.github.createdelight.tetraapothiclink.compat.TetrawearCompat;
 
 public final class OpportunityEffect {
 
@@ -39,8 +37,7 @@ public final class OpportunityEffect {
     }
 
     static int opportunityWindowTicks(Player player, SpecialEffectRules.OpportunityTier tier) {
-        MobEffectInstance evade = player.getEffect(EvadeMobEffect.instance);
-        return SpecialEffectMath.opportunityWindowTicks(tier.windowTicks(), evade == null ? 0 : evade.getDuration());
+        return SpecialEffectMath.opportunityWindowTicks(tier.windowTicks(), TetrawearCompat.evadeDuration(player));
     }
 
     public static void onAvoidedAttack(Player player, Entity source) {
@@ -98,12 +95,7 @@ public final class OpportunityEffect {
     }
 
     private static void refundDodgeCost(Player player, SpecialEffectRules.OpportunityTier tier, double spent) {
-        var energy = EnergySystem.get(player);
-        if (energy == null) return;
-        double refund = SpecialEffectMath.opportunityRefund(spent, tier.energyRefundFraction(), energy.current, energy.max);
-        if (refund <= 0.0D) return;
-        energy.current += refund;
-        EnergyHelper.scheduleSync(player);
+        TetrawearCompat.refundEnergy(player, spent, tier.energyRefundFraction());
     }
 
     private static void stagger(LivingEntity attacker, SpecialEffectRules.OpportunityTier tier) {

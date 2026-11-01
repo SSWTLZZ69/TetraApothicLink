@@ -14,6 +14,7 @@ public final class ReplacementNbtSanitizer {
     }
 
     public static void normalize(@Nullable CompoundTag sourceTag, CompoundTag targetTag) {
+        io.github.createdelight.tetraapothiclink.ascension.AscensionData.transfer(sourceTag, targetTag);
         if (sourceTag != null && sourceTag.contains(AFFIX_DATA, Tag.TAG_COMPOUND)) {
             targetTag.put(AFFIX_DATA, sourceTag.getCompound(AFFIX_DATA).copy());
         } else {

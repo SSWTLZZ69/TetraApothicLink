@@ -34,6 +34,26 @@ class ContentDataTest {
             "heavy/efficient_guard", 0.015D);
 
     @Test
+    void tetrawearAttributesAreGuardedWithoutDiscardingIndependentGemBonuses() throws IOException {
+        for (String affix : List.of("light/agility", "light/efficient_guard", "light/efficient_strikes", "heavy/efficient_guard")) {
+            assertTetrawearCondition(read("data/tetra_apothic_link/affixes/" + affix + ".json"));
+        }
+        for (String gem : List.of("guardian", "tyrannical")) {
+            var bonuses = read(gemPatchPath(gem)).getAsJsonArray("bonuses");
+            assertTetrawearCondition(bonuses.get(0).getAsJsonObject());
+            assertFalse(bonuses.get(1).getAsJsonObject().has("conditions"), gem);
+        }
+        String metadata = Files.readString(Path.of("src/main/resources/META-INF/mods.toml"));
+        assertTrue(metadata.contains("modId=\"tetrawear\"\nmandatory=false"));
+    }
+
+    private static void assertTetrawearCondition(JsonObject definition) {
+        JsonObject condition = definition.getAsJsonArray("conditions").get(0).getAsJsonObject();
+        assertEquals("forge:mod_loaded", condition.get("type").getAsString());
+        assertEquals("tetrawear", condition.get("modid").getAsString());
+    }
+
+    @Test
     void armorAffixesRemainBasicAndTightlyRolled() throws IOException {
         for (Map.Entry<String, Double> entry : AFFIX_MAX_WIDTHS.entrySet()) {
             JsonObject affix = read("data/tetra_apothic_link/affixes/" + entry.getKey() + ".json");
