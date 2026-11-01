@@ -1,0 +1,12 @@
+{
+  "projects": [
+    { "slug": "tetra", "projectID": "289712", "type": "requiredDependency" },
+    { "slug": "apotheosis", "projectID": "313970", "type": "requiredDependency" },
+    { "slug": "placebo", "projectID": "283644", "type": "requiredDependency" },
+    { "slug": "apothic-attributes", "projectID": "898963", "type": "requiredDependency" },
+    { "slug": "tetrawear", "projectID": "670545", "type": "optionalDependency" },
+    { "slug": "create-enchantment-industry", "projectID": "688768", "type": "optionalDependency" },
+    { "slug": "tetracelium", "projectID": "929534", "type": "optionalDependency" },
+    { "slug": "tetra-insight", "projectID": "1613955", "type": "optionalDependency" }
+  ]
+}

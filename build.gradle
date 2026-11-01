@@ -138,8 +138,20 @@ curseforge {
         .orElse(providers.environmentVariable('CURSEFORGE_TOKEN'))
     project {
         id = '1653941'
-        releaseType = mod_version.contains('alpha') ? 'alpha' : 'release'
-        changelog = 'Experimental Ascension Table: equipment-bound integrity/material ascension, native Tetra destabilized overlimit and stabilization, Apotheosis UI and algorithms; Tetrawear is optional. See CHANGELOG.md for details.'
+        releaseType = mod_version.toLowerCase().contains('alpha') ? 'alpha' : mod_version.toLowerCase().contains('beta') ? 'beta' : 'release'
+        changelogType = 'markdown'
+        def releaseNotes = file("docs/release/curseforge-changelog-${mod_version}.md")
+        changelog = releaseNotes.exists() ? releaseNotes.getText('UTF-8') : file('CHANGELOG.md').getText('UTF-8')
+        relations {
+            requiredDependency 'tetra'
+            requiredDependency 'apotheosis'
+            requiredDependency 'placebo'
+            requiredDependency 'apothic-attributes'
+            optionalDependency 'tetrawear'
+            optionalDependency 'create-enchantment-industry'
+            optionalDependency 'tetracelium'
+            optionalDependency 'tetra-insight'
+        }
         addGameVersion '1.20.1'
         addGameVersion 'Forge'
         addGameVersion 'Java 17'

@@ -1,1 +1,1 @@
-Connects Tetra and Tetrawear modular equipment with Apotheosis affixes, gems, loot categories, reforging, and four-stage magic-capacity progression.
+Connects Tetra with Apotheosis affixes, gems, reforging and magic-capacity progression; adds an experimental Ascension Table. Tetrawear is optional.

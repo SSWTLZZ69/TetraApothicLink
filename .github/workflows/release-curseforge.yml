@@ -4,180 +4,163 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Mod version (e.g. 0.1.1)'
+        description: 'Exact version already recorded in gradle.properties'
         required: true
+        default: '0.2.0-alpha.1'
       game_versions:
-        description: 'CurseForge numeric gameVersion IDs for minecraft.curseforge.com legacy API (e.g. 7498=MC 1.20.1, others=loader/env type ids)'
+        description: 'Legacy CurseForge game-version names (not Core API IDs)'
         required: true
-        default: '7498'
+        default: '1.20.1,Forge,Java 17'
       release_type:
-        description: 'CurseForge release type'
+        description: 'auto derives alpha/beta/release from version'
         required: true
-        default: 'release'
+        default: 'auto'
         type: choice
-        options: [release, beta, alpha]
-      build_branch:
-        description: 'Branch/ref to build'
+        options: [auto, alpha, beta, release]
+      dry_run:
+        description: 'Prepare artifact and metadata only; do not upload'
         required: true
-        default: 'main'
+        default: true
+        type: boolean
       create_github_release:
-        description: 'Also create a GitHub Release with the jar'
+        description: 'Also create a GitHub Release, only after a real CurseForge upload'
         required: false
         default: false
         type: boolean
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: curseforge-${{ inputs.version }}
+  cancel-in-progress: false
 
 jobs:
-  build-and-upload:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      sha256: ${{ steps.plan.outputs.sha256 }}
+      filename: ${{ steps.plan.outputs.filename }}
+      release_type: ${{ steps.plan.outputs.release_type }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.build_branch }}
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Build jar
-        run: bash ./gradlew build -x test --console=plain
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Verify requested version and release tools
         env:
-          CI: 'true'
-
-      - name: Locate jar
-        id: jar
-        run: |
-          JAR=$(ls build/libs/tetra_apothic_link-${{ inputs.version }}.jar | head -1)
-          echo "path=$JAR" >> "$GITHUB_OUTPUT"
-          echo "name=$(basename "$JAR")" >> "$GITHUB_OUTPUT"
-
-      - name: Upload to CurseForge
-        env:
-          CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          CF_PROJECT_ID: '1653941'
-          JAR_PATH: ${{ steps.jar.outputs.path }}
-          JAR_NAME: ${{ steps.jar.outputs.name }}
-          GAME_VERSIONS: ${{ inputs.game_versions }}
-          RELEASE_TYPE: ${{ inputs.release_type }}
           VERSION: ${{ inputs.version }}
         run: |
-          python3 - <<'PYEOF'
-          import json, os, urllib.request, uuid
-
-          token = os.environ['CF_TOKEN']
-          project = os.environ['CF_PROJECT_ID']
-          jar = os.environ['JAR_PATH']
-          jarname = os.environ['JAR_NAME']
-          def api(path):
-              req = urllib.request.Request(
-                  f"https://api.curseforge.com{path}",
-                  headers={"Accept": "application/json", "X-Api-Key": token},
-              )
-              return json.loads(urllib.request.urlopen(req, timeout=60).read())
-
-          def resolve_inputs(token):
-              """Split names/ids into gameVersions (version ids) and gameVersionTypeIds."""
-              raw = [v.strip() for v in os.environ['GAME_VERSIONS'].split(',')]
-              if all(v.isdigit() for v in raw):
-                  return [int(v) for v in raw], []
-              type_names = {}
-              try:
-                  for t in api("/v1/games/432/version-types")["data"]:
-                      type_names[t["name"]] = t["id"]
-              except Exception as e:
-                  print(f"version-types lookup failed: {e}")
-              version_ids = {}
-              try:
-                  for g in api("/v2/games/432/versions")["data"]:
-                      for gv in g.get("versions", []):
-                          version_ids[gv["name"]] = gv["id"]
-                      if "name" in g:
-                          version_ids[g["name"]] = g.get("id")
-              except Exception as e:
-                  print(f"versions lookup failed: {e}")
-              gvs, gvt = [], []
-              for v in raw:
-                  if v.isdigit():
-                      gvs.append(int(v))
-                  elif v in version_ids:
-                      gvs.append(version_ids[v])
-                  elif v in type_names:
-                      gvt.append(type_names[v])
-                  else:
-                      raise SystemExit(f"Unknown name '{v}'. types={sorted(type_names)} versions(sample)={sorted(version_ids)[:60]}")
-              return gvs, gvt
-
-          gvs, gvtids = resolve_inputs(token)
-          print("gameVersions:", gvs, "gameVersionTypeIds:", gvtids)
-          rtype = os.environ['RELEASE_TYPE']
-          ver = os.environ['VERSION']
-
-          changelog = (
-              "- Fix compatibility with Fallen Lib: Gem.bonuses and Gem.bonusMap now use\n"
-              "  mutable collections instead of immutable copies, preventing an\n"
-              "  UnsupportedOperationException during datapack reload when entering a world.\n\n"
-              "- 修复与 Fallen Lib 的兼容问题：Gem 的 bonuses/bonusMap 改用可变集合，\n"
-              "  避免进存档时数据包重载抛出 UnsupportedOperationException。"
-          )
-
-          metadata = {
-              "changelog": changelog,
-              "changelogType": "markdown",
-              "displayName": f"Tetra Apothic Link {ver}",
-              "gameVersions": gvs,
-              "releaseType": rtype,
-          }
-
-          boundary = uuid.uuid4().hex
-          CRLF = b"\r\n"
-          parts = []
-          parts.append(b"--" + boundary.encode() + CRLF)
-          parts.append(b'Content-Disposition: form-data; name="metadata"' + CRLF + CRLF)
-          parts.append(json.dumps(metadata).encode() + CRLF)
-          parts.append(b"--" + boundary.encode() + CRLF)
-          parts.append(
-              b'Content-Disposition: form-data; name="file"; filename="'
-              + jarname.encode() + b'"' + CRLF)
-          parts.append(b"Content-Type: application/java-archive" + CRLF + CRLF)
-          parts.append(open(jar, "rb").read() + CRLF)
-          parts.append(b"--" + boundary.encode() + b"--" + CRLF)
-          body = b"".join(parts)
-
-          req = urllib.request.Request(
-              f"https://minecraft.curseforge.com/api/projects/{project}/upload-file",
-              data=body,
-              headers={
-                  "X-Api-Token": token,
-                  "Content-Type": f"multipart/form-data; boundary={boundary}",
-              },
-              method="POST",
-          )
-          try:
-              with urllib.request.urlopen(req, timeout=180) as resp:
-                  data = json.loads(resp.read())
-                  print(f"UPLOAD OK fileId={data.get('id')} fileName={data.get('fileName')}")
-          except urllib.error.HTTPError as e:
-              print(f"UPLOAD FAIL {e.code}: {e.read().decode('utf-8', 'replace')}")
-              raise SystemExit(1)
-          PYEOF
-
-      - name: Upload jar artifact
+          python3 - <<'PY'
+          import os, pathlib
+          actual = dict(line.split('=', 1) for line in pathlib.Path('gradle.properties').read_text().splitlines() if '=' in line)['mod_version']
+          if os.environ['VERSION'] != actual:
+              raise SystemExit('Requested version does not match gradle.properties')
+          PY
+          python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+      - name: Build and test normal runtime
+        run: bash ./gradlew clean test build --console=plain
+      - name: Preserve normal-runtime test report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.jar.outputs.name }}
-          path: ${{ steps.jar.outputs.path }}
+          name: tests-normal-${{ inputs.version }}
+          path: build/reports/tests/test
+      - name: Test without Tetrawear
+        run: bash ./gradlew -PwithoutTetrawear=true test --rerun-tasks --console=plain
+      - name: Prepare offline upload plan
+        id: plan
+        env:
+          VERSION: ${{ inputs.version }}
+          RELEASE_TYPE: ${{ inputs.release_type }}
+          GAME_VERSIONS: ${{ inputs.game_versions }}
+        run: |
+          JAR="build/libs/tetra_apothic_link-${VERSION}.jar"
+          python3 scripts/curseforge_release.py --version "$VERSION" --jar "$JAR" --release-type "$RELEASE_TYPE" --game-versions "$GAME_VERSIONS"
+          python3 - <<'PY'
+          import json, os, pathlib
+          plan = json.loads(pathlib.Path('build/release/curseforge-plan.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('sha256=' + plan['sha256'] + '\n')
+              output.write('filename=' + pathlib.Path(plan['artifact']).name + '\n')
+              output.write('release_type=' + plan['metadata']['releaseType'] + '\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('## CurseForge release plan\n\n')
+              summary.write('Project: **1653941**\n\n')
+              summary.write('Type: **' + plan['metadata']['releaseType'] + '**\n\n')
+              summary.write('SHA-256: `' + plan['sha256'] + '`\n\n')
+              summary.write('Tetrawear: **optionalDependency**. A dry run never reads the publishing secret or uploads.\n')
+          PY
+      - name: Upload exact prepared artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: curseforge-prepared-${{ inputs.version }}
+          path: |
+            build/libs/tetra_apothic_link-${{ inputs.version }}.jar
+            build/release/curseforge-plan.json
+          if-no-files-found: error
+      - name: Preserve without-Tetrawear test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-without-tetrawear-${{ inputs.version }}
+          path: build/reports/tests/test
 
+  publish:
+    if: ${{ !inputs.dry_run }}
+    needs: prepare
+    runs-on: ubuntu-latest
+    environment: curseforge
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: curseforge-prepared-${{ inputs.version }}
+          path: prepared
+      - name: Verify optional GitHub release tag
+        if: ${{ inputs.create_github_release }}
+        env:
+          VERSION: ${{ inputs.version }}
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: |
+          git fetch --tags origin
+          if git show-ref --verify --quiet "refs/tags/v${VERSION}"; then
+            test "$(git rev-list -n 1 "v${VERSION}")" = "$EXPECTED_COMMIT" || { echo 'Existing tag points to a different commit'; exit 1; }
+          fi
+      - name: Upload approved artifact once
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          VERSION: ${{ inputs.version }}
+          RELEASE_TYPE: ${{ inputs.release_type }}
+          GAME_VERSIONS: ${{ inputs.game_versions }}
+          EXPECTED_SHA256: ${{ needs.prepare.outputs.sha256 }}
+        run: |
+          JAR="prepared/libs/tetra_apothic_link-${VERSION}.jar"
+          python3 scripts/curseforge_release.py --version "$VERSION" --jar "$JAR" --release-type "$RELEASE_TYPE" --game-versions "$GAME_VERSIONS" --execute --expected-sha256 "$EXPECTED_SHA256"
+      - name: Preserve upload receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: curseforge-upload-receipt-${{ inputs.version }}-${{ github.run_id }}
+          path: build/release/curseforge-upload-receipt.json
+          if-no-files-found: ignore
       - name: Create GitHub Release
         if: ${{ inputs.create_github_release }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ inputs.version }}
-          name: v${{ inputs.version }}
-          files: ${{ steps.jar.outputs.path }}
-          generate_release_notes: true
+          target_commitish: ${{ github.sha }}
+          name: Tetra Apothic Link ${{ inputs.version }}
+          files: prepared/libs/${{ needs.prepare.outputs.filename }}
+          body_path: docs/release/curseforge-changelog-${{ inputs.version }}.md
+          prerelease: ${{ needs.prepare.outputs.release_type != 'release' }}
